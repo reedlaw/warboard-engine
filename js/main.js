@@ -50,3 +50,7 @@ ws.bind('close', function(data){
 ws.bind('send_message', function(data){
     console.log(data.name + ' says: ' + data.message);
 });
+
+ws.bind('time', function(data){
+    console.log(data.name + ' time: ' + data.message);
+});

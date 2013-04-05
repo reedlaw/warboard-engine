@@ -5,6 +5,7 @@ import (
 	"os"
 	"net/http"
 	"code.google.com/p/go.net/websocket"
+	// "github.com/araddon/httpstream"
 )
 
 func main() {

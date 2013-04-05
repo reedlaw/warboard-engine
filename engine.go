@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"net/http"
+	"bufio"
 	"code.google.com/p/go.net/websocket"
+	"fmt"
+	"net/http"
+	"os"
 	// "github.com/araddon/httpstream"
 )
 
@@ -12,14 +13,14 @@ func main() {
 	http.Handle("/js/", http.FileServer(http.Dir(".")))
 	http.Handle("/css/", http.FileServer(http.Dir(".")))
 	http.Handle("/", http.FileServer(http.Dir(".")))
-	http.Handle("/websocket/", websocket.Handler(socketHandler))
+	http.Handle("/websocket/", websocket.Handler(wsHandler))
 	err := http.ListenAndServe("localhost:8000", nil)
 	checkError(err)
 }
 
-func socketHandler(ws *websocket.Conn) {
+func wsHandler(ws *websocket.Conn) {
 	fmt.Println("Processing websockets")
-	// go readWebsocket(ws)
+	go readKeyboard(ws)
 	var msg string
 
 	for {
@@ -34,9 +35,15 @@ func socketHandler(ws *websocket.Conn) {
 	fmt.Println("Exit")
 }
 
-func readWebsocket(ws *websocket.Conn) {
+func readKeyboard(ws *websocket.Conn) {
 	for {
-		// do something
+		in := bufio.NewReader(os.Stdin)
+		input, err := in.ReadString('\n')
+		if err != nil {
+			// handle error
+		}
+		websocket.Message.Send(ws, input)
+		fmt.Println("Keyboard message", input)
 	}
 }
 

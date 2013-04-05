@@ -16,8 +16,12 @@ var wsDispatcher = function(url){
     };
 
     conn.onmessage = function(msg){
-        var json = JSON.parse(msg.data)
-        dispatch(json.event, json.data)
+        try {
+            var json = JSON.parse(msg.data);
+            dispatch(json.event, json.data);            
+        } catch(err) {
+            console.log("Error: " + err.message);
+        }
     };
 
     conn.onclose = function(){dispatch('close',null)}
@@ -43,6 +47,6 @@ ws.bind('close', function(data){
     console.log("Closed socket");
 });
 
-ws.bind('message', function(data){
+ws.bind('send_message', function(data){
     console.log(data.name + ' says: ' + data.message);
 });
